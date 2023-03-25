@@ -38,7 +38,7 @@ function HeroSlider() {
                   <h1 className="text-5xl font-bold">{movie.title}</h1>
                   <p className="py-6 max-w-3xl">{movie.overview}</p>
                   <Link to={`/movie/${movie.id}`} className="btn btn-primary">
-                    Get Started
+                    Whatch Now
                   </Link>
                 </div>
               </div>
