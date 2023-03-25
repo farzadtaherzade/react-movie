@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Search from "../Form/Search";
 
 function Navbar() {
   return (
@@ -24,13 +25,7 @@ function Navbar() {
         </ul>
       </div>
       <div className="flex-none gap-2">
-        <div className="form-control">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input input-ghost "
-          />
-        </div>
+        <Search />
       </div>
     </div>
   );
