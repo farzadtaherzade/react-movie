@@ -10,7 +10,7 @@ const CastCard = ({ cast: { profile_path, character, original_name } }) => {
               ? `https://image.tmdb.org/t/p/w500${profile_path}`
               : defaults
           }
-          alt="Shoes"
+          alt={original_name}
         />
       </figure>
       <div className="card-body">

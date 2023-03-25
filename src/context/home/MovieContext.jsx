@@ -17,15 +17,30 @@ export const MovieProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(MovieReducer, initialState);
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (media_type, url) => {
     clearMovies();
     clearTrailerUrl();
     setLoading();
-    const movies = await axios(`/movie/now_playing?api_key=${TMDB_TOKEN}`);
+    const moviesData = await axios(
+      `/${url}/${media_type}?api_key=${TMDB_TOKEN}&language=en-US&page=${state.currentPage}`
+    );
 
     dispatch({
       type: "GET_MOVIES",
-      payload: movies.data.results,
+      payload: moviesData.data.results,
+    });
+  };
+
+  const searchMovies = async (query) => {
+    setLoading();
+    clearMovies();
+    const result = await axios.get(
+      `/search/multi?api_key=${TMDB_TOKEN}&query=${query}`
+    );
+    console.log(result.data.results);
+    dispatch({
+      type: "GET_MOVIES",
+      payload: result.data.results,
     });
   };
 
@@ -98,6 +113,7 @@ export const MovieProvider = ({ children }) => {
         fetchMovies,
         fetchSingleMovie,
         fetchCasts,
+        searchMovies,
       }}
     >
       {children}
