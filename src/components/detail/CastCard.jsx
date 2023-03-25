@@ -1,9 +1,15 @@
+import image from "../../assets/default.png";
 const CastCard = ({ cast: { profile_path, character, original_name } }) => {
+  const defaults = image;
   return (
     <div className="card bg-base-200 shadow-xl">
       <figure>
         <img
-          src={`https://image.tmdb.org/t/p/w500${profile_path}`}
+          src={
+            profile_path
+              ? `https://image.tmdb.org/t/p/w500${profile_path}`
+              : defaults
+          }
           alt="Shoes"
         />
       </figure>
