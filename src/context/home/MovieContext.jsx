@@ -50,7 +50,6 @@ export const MovieProvider = ({ children }) => {
     const movie = await axios(
       `/${media_type}/${id}/credits?api_key=${TMDB_TOKEN}&language=en-US`
     );
-    console.log(movie.data.cast);
     dispatch({
       type: "GET_CASTS",
       payload: movie.data.cast,
