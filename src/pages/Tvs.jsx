@@ -1,19 +1,38 @@
 import MovieCard from "../components/movies/MovieCard";
 import Container from "../components/Container";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import MovieContext from "../context/home/MovieContext";
 import SkeletonCard from "../components/movies/SkeletonCard";
 
 const Tvs = () => {
-  const { movies, loading, fetchMovies } = useContext(MovieContext);
+  const { movies, loading, fetchMovies, clearMovies } =
+    useContext(MovieContext);
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const [offset, setOffset] = useState(1);
   const params = searchParams.get("media") || "popular";
 
   useEffect(() => {
-    fetchMovies(params, "tv");
+    fetchMovies(params, "tv", offset);
+  }, [params, offset]);
+
+  useEffect(() => {
+    clearMovies();
+    setOffset(1);
   }, [params]);
+
+  useEffect(() => {
+    const handleScroll = (e) => {
+      const scrollHeight = e.target.documentElement.scrollHeight;
+      const currentHeight =
+        e.target.documentElement.scrollTop + window.innerHeight;
+      if (currentHeight + 1 >= scrollHeight) {
+        setOffset(offset + 1);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [offset]);
 
   const setQuery = (event, query) => {
     setSearchParams({ media: query });

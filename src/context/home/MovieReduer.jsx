@@ -3,7 +3,7 @@ const MovieReducer = (state, action) => {
     case "GET_MOVIES":
       return {
         ...state,
-        movies: action.payload,
+        movies: [...state.movies, ...action.payload],
         loading: false,
       };
     case "GET_DETAIL_MOVIE":
@@ -33,6 +33,12 @@ const MovieReducer = (state, action) => {
       return {
         ...state,
         movie: {},
+        loading: true,
+      };
+    case "CLEAR_MOVIES":
+      return {
+        ...state,
+        movies: [],
         loading: true,
       };
     case "CLEAR_URL":

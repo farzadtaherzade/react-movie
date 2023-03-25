@@ -17,14 +17,16 @@ export const MovieProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(MovieReducer, initialState);
 
-  const fetchMovies = async (media_type, url) => {
-    clearMovies();
-    clearTrailerUrl();
-    setLoading();
+  const fetchMovies = async (media_type, url, offset) => {
+    if (offset <= 1 || offset === undefined) {
+      clearMovies();
+      clearTrailerUrl();
+      setLoading();
+    }
     const moviesData = await axios(
-      `/${url}/${media_type}?api_key=${TMDB_TOKEN}&language=en-US&page=${state.currentPage}`
+      `/${url}/${media_type}?api_key=${TMDB_TOKEN}&language=en-US&page=${offset}`
     );
-
+    console.log(moviesData.data);
     dispatch({
       type: "GET_MOVIES",
       payload: moviesData.data.results,
@@ -33,6 +35,7 @@ export const MovieProvider = ({ children }) => {
 
   const searchMovies = async (query) => {
     setLoading();
+    clearMovie();
     clearMovies();
     const result = await axios.get(
       `/search/multi?api_key=${TMDB_TOKEN}&query=${query}`
@@ -48,7 +51,7 @@ export const MovieProvider = ({ children }) => {
     clearTrailerUrl();
     setLoading();
     clearCasts();
-    clearMovies();
+    clearMovie();
     const movie = await axios(
       `/${media_type}/${id}?api_key=${TMDB_TOKEN}&language=en-US`
     );
@@ -86,9 +89,14 @@ export const MovieProvider = ({ children }) => {
       type: "CLEAR_CASTS",
     });
   };
-  const clearMovies = () => {
+  const clearMovie = () => {
     dispatch({
       type: "CLEAR_MOVIE",
+    });
+  };
+  const clearMovies = () => {
+    dispatch({
+      type: "CLEAR_MOVIES",
     });
   };
   const clearTrailerUrl = () => {
@@ -111,6 +119,7 @@ export const MovieProvider = ({ children }) => {
         trailer: state.trailer,
         loading: state.loading,
         fetchMovies,
+        clearMovies,
         fetchSingleMovie,
         fetchCasts,
         searchMovies,

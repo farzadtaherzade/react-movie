@@ -7,14 +7,33 @@ import MovieContext from "../context/home/MovieContext";
 
 const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { movies, loading, fetchMovies } = useContext(MovieContext);
+  const { movies, loading, fetchMovies, clearMovies } =
+    useContext(MovieContext);
+  const [offset, setOffset] = useState(1);
 
   const mediaQueryParams = searchParams.get("media") || "popular";
-  const searchQueryParams = searchParams.get("media") || "popular";
 
   useEffect(() => {
-    fetchMovies(mediaQueryParams, "movie");
+    fetchMovies(mediaQueryParams, "movie", offset);
+  }, [mediaQueryParams, offset]);
+  
+  useEffect(() => {
+    clearMovies();
+    setOffset(1);
   }, [mediaQueryParams]);
+
+  useEffect(() => {
+    const handleScroll = (e) => {
+      const scrollHeight = e.target.documentElement.scrollHeight;
+      const currentHeight =
+        e.target.documentElement.scrollTop + window.innerHeight;
+      if (currentHeight + 1 >= scrollHeight) {
+        setOffset(offset + 1);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [offset]);
 
   const setQuery = (event, query) => {
     setSearchParams({ media: query });
